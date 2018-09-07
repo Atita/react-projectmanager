@@ -11,7 +11,10 @@ class App extends Component {
 			projects:[
 				
 			]
+			
 		}
+		this.handleDeleteProject=this.handleDeleteProject.bind(this);
+		this.handleAddProject=this.handleAddProject.bind(this)
 	}
   //lifecycle methods
    componentWillMount() {
@@ -49,8 +52,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <AddProject addProject={this.handleAddProject.bind(this)} />
-		<Projects projects={this.state.projects} onDelete={this.handleDeleteProject.bind(this)} />
+        <AddProject addProject={this.handleAddProject} />
+		<Projects projects={this.state.projects} onDelete={this.handleDeleteProject} />
       </div>
     );
   }
