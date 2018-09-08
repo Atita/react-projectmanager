@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
 import Projects from './Components/Projects';
 import AddProject from './Components/AddProject';
+import Todos from './Components/Todos';
 import uuid from 'uuid';
 //import './App.css';
 
@@ -8,17 +10,34 @@ class App extends Component {
 	constructor() {
 		super();
 		this.state = {
-			projects:[
-				
-			]
+			projects:[],
+			todos:[]	
+			
 			
 		}
 		this.handleDeleteProject=this.handleDeleteProject.bind(this);
 		this.handleAddProject=this.handleAddProject.bind(this)
 	}
-  //lifecycle methods
-   componentWillMount() {
-	   this.setState({projects: [
+	
+  getTodos() {
+	  //api request
+	    $.ajax({
+			url:'https://jsonplaceholder.typicode.com/todos',
+			dataType:'json',
+			cache:false,
+			success: function(data) {
+				this.setState({todos: data},()=>{
+					console.log(this.state);
+				});
+			}.bind(this),
+			error: function( xhr , status , err) { 
+				console.log(err);
+		}
+		});
+  }	
+
+  getProjects(){
+	  this.setState({projects: [
 		   {
 					id:uuid.v4(),
 					title:"Business Website",
@@ -35,7 +54,17 @@ class App extends Component {
 					category: "Web Development"
 				}
 	   ]});
+  }
+  //lifecycle methods
+   componentWillMount() {
+	   this.getProjects();
+	   this.getTodos();
    }	
+   
+   componentDidMount() {
+	   	   this.getTodos();
+   }
+   
    handleAddProject(project) {
 	   let projects= this.state.projects;
 	   projects.push(project);
@@ -54,6 +83,8 @@ class App extends Component {
       <div className="App">
         <AddProject addProject={this.handleAddProject} />
 		<Projects projects={this.state.projects} onDelete={this.handleDeleteProject} />
+		<hr />
+		<Todos todos={this.state.todos}/>
       </div>
     );
   }
